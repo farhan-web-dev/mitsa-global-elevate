@@ -43,7 +43,7 @@ import pap12 from "@/assets/paper/pap12.png";
 import pap13 from "@/assets/paper/pap13.png";
 import pap14 from "@/assets/paper/pap14.png";
 import pap15 from "@/assets/paper/pap15.png";
-import pap16 from "@/assets/paper/pap16.png";
+// import pap16 from "@/assets/paper/pap16.png";
 import sta1 from "@/assets/stationery/sta1.png";
 import sta2 from "@/assets/stationery/sta2.png";
 import sta3 from "@/assets/stationery/sta3.png";
@@ -346,13 +346,14 @@ export const products: Product[] = [
   name: "Toilet Roll",
   specs: "All sizes available • Toilet rolls",
   image: pap15,
-},{
-  id: "pap-15",
-  categoryId: "paper",
-  name: "Bed Roll",
-  specs: "All sizes available • Bed rolls",
-  image: pap16,
 },
+// {
+//   id: "pap-15",
+//   categoryId: "paper",
+//   name: "Bed Roll",
+//   specs: "All sizes available • Bed rolls",
+//   image: pap16,
+// },
 // Stationery Items
 {
   id: "sta-1",
