@@ -4,10 +4,11 @@ import logo from "@/assets/mitsa-logo-transparent.png";
 
 const navLinks = [
   { label: "Home", href: "#hero" },
-  { label: "About", href: "#about" },
+  // { label: "About", href: "#about" },
+  { label: "Leadership", href: "#leadership" },
   { label: "Products", href: "#products" },
-  { label: "Why Us", href: "#why-us" },
-  { label: "Industries", href: "#industries" },
+  // { label: "Why Us", href: "#why-us" },
+  // { label: "Industries", href: "#industries" },
   { label: "Contact", href: "#contact" },
 ];
 
