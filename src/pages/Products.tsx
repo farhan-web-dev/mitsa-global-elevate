@@ -5,18 +5,18 @@ import { ArrowLeft, ChevronLeft, ChevronRight, ListFilter } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import { categories, products } from "@/data/products";
-// import productsBg from "@/assets/products-bg.png";
+import { useCategories, useProducts } from "@/hooks/useCatalog";
 
 const ITEMS_PER_PAGE = 8;
 
 const Products = () => {
   const { hash } = useLocation();
+  const { data: categories = [], isLoading: categoriesLoading } = useCategories();
+  const { data: products = [], isLoading: productsLoading } = useProducts();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    // If arriving with a hash, try to match it to a category
     if (hash) {
       const catId = hash.replace("#", "");
       if (categories.some((c) => c.id === catId)) {
@@ -29,22 +29,19 @@ const Products = () => {
     } else {
       window.scrollTo(0, 0);
     }
-  }, [hash]);
+  }, [hash, categories]);
 
-  // Handle category change
   const handleCategoryChange = (val: string) => {
     setSelectedCategory(val);
-    setCurrentPage(1); // Reset to page 1 on filter change
+    setCurrentPage(1);
     window.scrollTo({ top: 300, behavior: "smooth" });
   };
 
-  // Filter products
   const filteredProducts =
     selectedCategory === "all"
       ? products
       : products.filter((p) => p.categoryId === selectedCategory);
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedProducts = filteredProducts.slice(
@@ -52,15 +49,13 @@ const Products = () => {
     startIndex + ITEMS_PER_PAGE
   );
 
+  const isLoading = categoriesLoading || productsLoading;
+
   return (
     <>
       <Navbar />
-      
-      {/* Hero Section */}
-      <div 
-        className="pt-28 pb-16 border-b border-border bg-cover bg-center bg-no-repeat relative"
-        // style={{ backgroundImage: `url(${productsBg})` }}
-      >
+
+      <div className="pt-28 pb-16 border-b border-border bg-cover bg-center bg-no-repeat relative">
         <div className="absolute inset-0 bg-background/90" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
           <Link
@@ -80,7 +75,6 @@ const Products = () => {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-7xl flex flex-col md:flex-row gap-8 items-start">
-        {/* Sidebar / Filters */}
         <div className="w-full md:w-64 shrink-0 top-24 md:sticky space-y-6">
           <div className="bg-card border border-border rounded-xl p-5">
             <div className="flex items-center gap-2 font-bold text-lg mb-4 pb-4 border-b border-border">
@@ -116,15 +110,22 @@ const Products = () => {
           </div>
         </div>
 
-        {/* Product Grid */}
         <div className="flex-1 w-full min-w-0">
           <div className="mb-6 flex items-center justify-between">
             <p className="text-muted-foreground">
-              Showing <span className="font-semibold text-foreground">{filteredProducts.length}</span> results
+              Showing{" "}
+              <span className="font-semibold text-foreground">
+                {filteredProducts.length}
+              </span>{" "}
+              results
             </p>
           </div>
 
-          {filteredProducts.length === 0 ? (
+          {isLoading ? (
+            <div className="text-center py-20 bg-card rounded-2xl border border-border">
+              <p className="text-muted-foreground">Loading products...</p>
+            </div>
+          ) : filteredProducts.length === 0 ? (
             <div className="text-center py-20 bg-card rounded-2xl border border-border">
               <p className="text-muted-foreground">No products found for this category.</p>
             </div>
@@ -162,12 +163,11 @@ const Products = () => {
                 ))}
               </div>
 
-              {/* Pagination Controls */}
               {totalPages > 1 && (
                 <div className="flex flex-wrap items-center justify-center gap-2 mt-12 bg-card p-3 rounded-3xl border border-border w-fit max-w-full mx-auto shadow-sm">
                   <button
                     onClick={() => {
-                      setCurrentPage(p => Math.max(1, p - 1));
+                      setCurrentPage((p) => Math.max(1, p - 1));
                       window.scrollTo({ top: 300, behavior: "smooth" });
                     }}
                     disabled={currentPage === 1}
@@ -175,7 +175,7 @@ const Products = () => {
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
-                  
+
                   <div className="flex flex-wrap items-center justify-center gap-1">
                     {Array.from({ length: totalPages }).map((_, i) => (
                       <button
@@ -197,7 +197,7 @@ const Products = () => {
 
                   <button
                     onClick={() => {
-                      setCurrentPage(p => Math.min(totalPages, p + 1));
+                      setCurrentPage((p) => Math.min(totalPages, p + 1));
                       window.scrollTo({ top: 300, behavior: "smooth" });
                     }}
                     disabled={currentPage === totalPages}
